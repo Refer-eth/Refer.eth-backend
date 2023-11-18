@@ -9,9 +9,11 @@ export default class userDataAccess extends Model<UserAttributes> {
 
   public address!: string;
 
+  public ensAddress!: string;
+
   public referLink!: string;
 
-  public password!: string;
+  public sign!: string;
 
   public referBy!: number;
 
@@ -34,10 +36,13 @@ userDataAccess.init(
             type: DataTypes.STRING,
             unique: true,
         },
+        ensAddress: {
+            type: DataTypes.STRING,
+        },
         referLink: {
             type: DataTypes.STRING,
         },
-        password: {
+        sign: {
             type: DataTypes.STRING,
         },
         referBy: {

@@ -2,15 +2,15 @@ import { Request, Response } from "express";
 import User from "./user";
 import jwt from "../utils/JWT";
 
-const generalReferLink = 'refer.eth/test';
+const generalReferId = 'refer.eth/test';
 
 export default class SignUpService {
-    public static async signUp(name: string, address: string, password: string, referBy?: number): Promise<User> {
-        return User.create(name, address, password, referBy);
+    public static async signUp(name: string, address: string, sign: string, referBy?: number): Promise<User> {
+        return User.create(name, address, sign, referBy);
     }
 
     private static async getRefererId(referId: string): Promise<number | undefined> {
-        if (referId === generalReferLink) {
+        if (referId === generalReferId) {
             return undefined;
         }
         let referer = null;
@@ -23,10 +23,10 @@ export default class SignUpService {
     }
 
     public static async signUpHandler(req: Request, res: Response) {
-        const { name, address, referId, password } = req.body;
-        const refererId = await SignUpService.getRefererId(referId);
+        const { name, address, referId, sign } = req.body;
         try {
-            const user = await SignUpService.signUp(name, address, password, refererId);
+            const refererId = await SignUpService.getRefererId(referId);
+            const user = await SignUpService.signUp(name, address, sign, refererId);
             res.status(200).json({
                 status: true,
                 message: 'The operation was successful',
@@ -45,14 +45,14 @@ export default class SignUpService {
     }
 
     public static async signInHandler(req: Request, res: Response) {
-        const { address, password } = req.body;
+        const { address, sign } = req.body;
         try {
             const user = await User.getByAddress(address);
-            // todo: save hashed password in db
-            if (!user.checkPassword(password)) {
+            // todo: save hashed sign in db
+            if (!user.checkSign(sign)) {
                 res.status(400).json({
                     status: false,
-                    message: 'The operation was not successful because of invalid password',
+                    message: 'The operation was not successful because of invalid sign',
                     result: null,
                 });
                 return;

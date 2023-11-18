@@ -15,14 +15,19 @@ export function up(queryInterface: any, Sequelize: any) {
             unique: true,
             comment: 'user wallet address',
         },
+        ensAddress: {
+            type: Sequelize.STRING,
+            comment: 'user ens address',
+            allowNull: true,
+        },
         referLink: {
             type: Sequelize.STRING,
             unique: true,
             comment: 'user refer link',
         },
-        password: {
+        sign: {
             type: Sequelize.STRING,
-            comment: 'user password',
+            comment: 'sign of user',
         },
         referBy: {
             type: Sequelize.INTEGER,

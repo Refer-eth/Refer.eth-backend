@@ -14,18 +14,21 @@ export default class User {
 
     private readonly address: string;
 
+    private readonly ensAddress: string;
+
     private readonly referLink: string;
 
     private readonly referBy: number;
 
-    private readonly password: string;
+    private readonly sign: string;
 
-    constructor(id: number, name: string, address: string, referLink: string, referBy: number, password: string) {
+    constructor(id: number, name: string, address: string, ensAddress: string, referLink: string, referBy: number, sign: string) {
         this.id = id;
         this.name = name;
         this.address = address;
+        this.ensAddress = ensAddress;
         this.referLink = referLink;
-        this.password = password;
+        this.sign = sign;
         this.referBy = referBy;
     }
 
@@ -33,24 +36,8 @@ export default class User {
         return this.id;
     }
 
-    public getName(): string {
-        return this.name;
-    }
-
-    public getAddress(): string {
-        return this.address;
-    }
-
-    public getReferLink(): string {
-        return this.referLink;
-    }
-
-    public getReferBy(): number {
-        return this.referBy;
-    }
-
-    public checkPassword(password: string): boolean {
-        return password === this.password;
+    public checkSign(sign: string): boolean {
+        return sign === this.sign;
     }
 
     private static generateReferLink(): string {
@@ -62,12 +49,13 @@ export default class User {
     }
 
     private static fromDB(user: userDataAccess): User {
-        return new User(user.id, user.name, user.address, user.referLink, user.referBy, user.password);
+        return new User(user.id, user.name, user.address, user.ensAddress, user.referLink, user.referBy, user.sign);
     }
 
-    public static async create(name: string, address: string, password: string,  referBy?: number): Promise<User> {
+    public static async create(name: string, address: string, sign: string,  referBy?: number): Promise<User> {
         const referLink = this.generateReferLink();
-        const user = await userDataAccess.create({ name, address, referLink, referBy, password } as unknown as userDataAccess);
+        const ensAddress = await convertToENSAddress(address);
+        const user = await userDataAccess.create({ name, address, referLink, referBy, sign, ensAddress } as unknown as userDataAccess);
         return this.fromDB(user);
     }
 
@@ -122,11 +110,11 @@ export default class User {
         const txs = await BlockchainService.getTransactions(this.address, startBlock, endBlock);
         // todo: we can filter in or out transactions here
         const txNumbers = txs.length;
-        const address = await convertToENSAddress(this.address) || this.address;
         return {
             id: this.id,
             name: this.name,
-            address,
+            address: this.address,
+            ensAddress: this.ensAddress,
             referLink: this.referLink,
             referBy: this.referBy,
             txNumbers,
