@@ -1,4 +1,4 @@
-import {ethers} from 'ethers';
+import { ethers } from 'ethers';
 
 // example address: 0x839395e20bbB182fa440d08F850E6c7A8f6F0780
 // output: griff.eth

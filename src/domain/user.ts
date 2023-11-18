@@ -113,8 +113,7 @@ export default class User {
         return {
             id: this.id,
             name: this.name,
-            address: this.address,
-            ensAddress: this.ensAddress,
+            address: this.ensAddress || this.address,
             referLink: this.referLink,
             referBy: this.referBy,
             txNumbers,
