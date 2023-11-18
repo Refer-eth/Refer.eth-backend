@@ -14,14 +14,10 @@ services:
       - ./mysql_data:/var/lib/mysql
 
   backend:
-    image: refer-eth-backend:1.0.0
+    image: refer-eth-backend:latest
     container_name: refer-eth-backend
     restart: always
     depends_on:
       - mysql
-    environment:
-      PMA_HOST: "localhost"
-      PMA_PORT: "3306"
-      PMA_ARBITRARY: 1
     ports:
       - 3000
