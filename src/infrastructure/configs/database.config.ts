@@ -4,7 +4,7 @@ const production = {
   database: 'refer_eth',
   host: 'localhost',
   dialect: 'mysql',
-  port: 3316,
+  port: 3306,
   dialectOptions: {
     bigNumberStrings: true,
   },
