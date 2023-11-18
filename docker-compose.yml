@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "1234"
+      MYSQL_DATABASE: "refer_eth"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "1234"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+
+  backend:
+    image: refer-eth-backend:latest
+    container_name: refer-eth-backend
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: "localhost"
+      PMA_PORT: "3306"
+      PMA_ARBITRARY: 1
+    ports:
+      - 3000
