@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import User from "./user";
+import jwt from "../utils/JWT";
 
 export default class SignUpService {
     public static async signUp(name: string, address: string, referBy: number, password: string): Promise<User> {
@@ -24,7 +25,10 @@ export default class SignUpService {
             res.status(200).json({
                 status: true,
                 message: 'The operation was successful',
-                result: user,
+                result: {
+                    user,
+                    token: jwt.generateJwtToken(user)
+                },
             });
         } catch (e) {
             res.status(400).json({
@@ -52,7 +56,10 @@ export default class SignUpService {
             res.status(200).json({
                 status: true,
                 message: 'The operation was successful',
-                result: user,
+                result: {
+                    user,
+                    token: jwt.generateJwtToken(user)
+                },
             });
         }
         catch (e) {
