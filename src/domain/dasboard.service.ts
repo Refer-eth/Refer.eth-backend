@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "./user";
 import BlockchainService from "../blockchain/transaction.service";
+import RewardCalculator from "./reward.calculator";
 
 const startBlock = 18590000;
 const endBlock = 1000000000;
@@ -26,13 +27,16 @@ export default class Dashboard {
                 };
             });
             const referredUsersRepresentation = await Promise.all(promises);
+            const score = RewardCalculator.calculateScore(userRepresentation, referredUsersRepresentation);
+            const result =  {
+                user: userRepresentation,
+                referredUsers: referredUsersRepresentation,
+                score
+            };
             res.status(200).json({
                 status: true,
                 message: 'The operation was successful',
-                result: {
-                    user: userRepresentation,
-                    referredUsers: referredUsersRepresentation
-                },
+                result,
             });
         } catch (e) {
             res.status(400).json({
