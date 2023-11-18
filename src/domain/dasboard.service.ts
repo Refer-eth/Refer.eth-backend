@@ -1,19 +1,38 @@
 import { Request, Response } from "express";
 import User from "./user";
+import BlockchainService from "../blockchain/transaction.service";
+
+const startBlock = 18590000;
+const endBlock = 1000000000;
 
 export default class Dashboard {
-    static async getUser(id: number): Promise<User> {
-        return await User.getById(id);
-    }
-
     static async dashboardHandler(req: Request, res: Response) {
         const { id } = req.params;
         try {
-            const user = await Dashboard.getUser(Number(id));
+            const user = await User.getById(Number(id));
+            const txs = await BlockchainService.getTransactions(user.getAddress(), startBlock, endBlock);
+            // todo: we can filter in or out transactions here
+            const txNumbers = txs.length;
+            const userRepresentation = {
+                user,
+                txNumbers
+            };
+            const referredUsers = await User.getByReferBy(Number(id));
+            const promises = referredUsers.map(async (user) => {
+                const userTxs = await BlockchainService.getTransactions(user.getAddress(), startBlock, endBlock);
+                return {
+                    user,
+                    txNumbers: userTxs.length
+                };
+            });
+            const referredUsersRepresentation = await Promise.all(promises);
             res.status(200).json({
                 status: true,
                 message: 'The operation was successful',
-                result: user,
+                result: {
+                    user: userRepresentation,
+                    referredUsers: referredUsersRepresentation
+                },
             });
         } catch (e) {
             res.status(400).json({

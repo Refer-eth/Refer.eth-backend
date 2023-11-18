@@ -27,6 +27,22 @@ export default class User {
         return this.id;
     }
 
+    public getName(): string {
+        return this.name;
+    }
+
+    public getAddress(): string {
+        return this.address;
+    }
+
+    public getReferLink(): string {
+        return this.referLink;
+    }
+
+    public getReferBy(): number {
+        return this.referBy;
+    }
+
     public checkPassword(password: string): boolean {
         return password === this.password;
     }
