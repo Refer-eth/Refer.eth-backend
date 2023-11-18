@@ -10,4 +10,8 @@ export default class RewardCalculator {
         }, 0);
         return userData.txNumbers * userTransactionFactor + referralScore;
     }
+
+    static calculateScoreForReferrer(txNumbers: any){
+        return txNumbers * referredUserTransactionFactor;
+    }
 }

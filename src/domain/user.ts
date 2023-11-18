@@ -1,5 +1,11 @@
 import userDataAccess from '../dataAccess/user';
 import randomString from '../utils/randomString';
+import BlockchainService from "../blockchain/transaction.service";
+import convertToENSAddress from "../utils/ENS";
+import RewardCalculator from "./reward.calculator";
+
+const startBlock = 18590000;
+const endBlock = 1000000000;
 
 export default class User {
     private readonly id: number;
@@ -48,14 +54,18 @@ export default class User {
     }
 
     private static generateReferLink(): string {
-        return 'refer.eth/' + randomString(64);
+        return 'https://refer.eth/refer?refer_id=' + randomString(32);
+    }
+
+    private static getReferLink(Id: string): string {
+        return 'https://refer.eth/refer?refer_id=' + Id;
     }
 
     private static fromDB(user: userDataAccess): User {
         return new User(user.id, user.name, user.address, user.referLink, user.referBy, user.password);
     }
 
-    public static async create(name: string, address: string, referBy: number, password: string): Promise<User> {
+    public static async create(name: string, address: string, password: string,  referBy?: number): Promise<User> {
         const referLink = this.generateReferLink();
         const user = await userDataAccess.create({ name, address, referLink, referBy, password } as unknown as userDataAccess);
         return this.fromDB(user);
@@ -84,16 +94,16 @@ export default class User {
         });
     }
 
-    public static async getByReferLink(link: string) {
+    public static async getByReferId(id: string) {
         const userData = await userDataAccess.findOne(
             {
-                where: {referLink: link}
+                where: {referLink: User.getReferLink(id)}
             }
         )
         if (userData) {
             return this.fromDB(userData);
         }
-        throw new Error(`User not found with this refer link: ${link}`);
+        throw new Error(`User not found with this refer id: ${id}`);
     }
 
     public static async getByAddress(address: string) {
@@ -106,6 +116,22 @@ export default class User {
             return this.fromDB(userData);
         }
         throw new Error(`User not found for address: ${address}`);
+    }
+
+    async getPresentationUser() {
+        const txs = await BlockchainService.getTransactions(this.address, startBlock, endBlock);
+        // todo: we can filter in or out transactions here
+        const txNumbers = txs.length;
+        const address = await convertToENSAddress(this.address) || this.address;
+        return {
+            id: this.id,
+            name: this.name,
+            address,
+            referLink: this.referLink,
+            referBy: this.referBy,
+            txNumbers,
+            scoreForReferrer: RewardCalculator.calculateScoreForReferrer(txNumbers),
+        };
     }
 }
 

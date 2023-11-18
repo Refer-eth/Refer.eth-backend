@@ -11,7 +11,13 @@ After that, you can see test coverage and test results.
 
 ## Running Program:
 ### locally:
-Before running this program, you should have node on your PC.
+Before running this program, you should have typescript, node and yarn on your PC.
+
+First, you should build the project by enter "yarn build" command in the terminal at the main directory of project.
+
+Then, you should install dependencies by enter "yarn install" command in the terminal at the main directory of project.
+
+For the first time, you should run migrations by enter "yarn migrate" command in the terminal at the main directory of project.
 
 Then, you can run this program by enter "yarn start" command in the terminal at the main directory of project.
 
