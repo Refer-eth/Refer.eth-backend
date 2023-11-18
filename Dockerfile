@@ -8,4 +8,8 @@ COPY . .
 
 RUN yarn install --frozen-lockfile  --prod
 
+CMD [ "yarn", "build" ]
+CMD [ "yarn", "migrate" ]
 CMD [ "yarn", "start" ]
+
+EXPOSE 3000
