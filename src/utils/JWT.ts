@@ -18,6 +18,9 @@ function authenticateToken(req: Request, res: Response, next: NextFunction) {
         if (err) {
             return res.sendStatus(403);
         }
+        if (String(user.id) !== String(req.params.id)) {
+            return res.sendStatus(403);
+        }
         // Proceed to the next middleware or route handler
         next();
     });
