@@ -24,6 +24,8 @@ export default class SignUpService {
 
     public static async signUpHandler(req: Request, res: Response) {
         res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, User-Agent');
+        res.header('Access-Control-Allow-Methods', 'POST, GET, PUT');
         const { name, address, referId, sign } = req.body;
         try {
             const refererId = await SignUpService.getRefererId(referId);
@@ -48,6 +50,8 @@ export default class SignUpService {
 
     public static async signInHandler(req: Request, res: Response) {
         res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, User-Agent');
+        res.header('Access-Control-Allow-Methods', 'POST, GET, PUT');
         const { address, sign } = req.body;
         try {
             const user = await User.getByAddress(address);
