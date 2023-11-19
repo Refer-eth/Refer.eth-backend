@@ -5,6 +5,7 @@ import RewardCalculator from "./reward.calculator";
 
 export default class Dashboard {
     static async dashboardHandler(req: Request, res: Response) {
+        res.header('Access-Control-Allow-Origin', '*');
         const { id } = req.params;
         try {
             const user = await User.getById(Number(id));

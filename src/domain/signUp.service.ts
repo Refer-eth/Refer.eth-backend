@@ -23,6 +23,7 @@ export default class SignUpService {
     }
 
     public static async signUpHandler(req: Request, res: Response) {
+        res.header('Access-Control-Allow-Origin', '*');
         const { name, address, referId, sign } = req.body;
         try {
             const refererId = await SignUpService.getRefererId(referId);
@@ -33,6 +34,7 @@ export default class SignUpService {
                 result: {
                     user,
                     token: jwt.generateJwtToken(user)
+
                 },
             });
         } catch (e) {
@@ -45,6 +47,7 @@ export default class SignUpService {
     }
 
     public static async signInHandler(req: Request, res: Response) {
+        res.header('Access-Control-Allow-Origin', '*');
         const { address, sign } = req.body;
         try {
             const user = await User.getByAddress(address);
