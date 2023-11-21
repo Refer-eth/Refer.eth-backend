@@ -9,4 +9,4 @@ app.use(morgan('dev'));
 app.use(Express.json());
 app.use('/api', router);
 
-app.listen(3000, 'localhost', () => console.log('server is up and running'));
+app.listen(3000, '0.0.0.0', () => console.log('server is up and running'));
