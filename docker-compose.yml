@@ -10,10 +10,9 @@ services:
       - MYSQL_ROOT_PASSWORD=1234
     ports:
       - "3306:3306"
-    volumes:
-      - ./mysql-data:/var/lib/mysql
-      - ./compose/mysql/conf:/etc/mysql/conf.d
-      - ./compose/mysql/initdb:/docker-entrypoint-initdb.d
+    networks:
+      - refer-eth-network
+
 
   backend:
     image: refer-eth-backend:latest
@@ -23,3 +22,9 @@ services:
       - mysql
     ports:
       - "3000:3000"
+    networks:
+      - refer-eth-network
+
+networks:
+  refer-eth-network:
+    driver: bridge
