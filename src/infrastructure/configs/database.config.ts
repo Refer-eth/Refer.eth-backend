@@ -2,7 +2,7 @@ const production = {
   username: 'root',
   password: '1234',
   database: 'refer_eth',
-  host: 'localhost',
+  host: 'mysql',
   dialect: 'mysql',
   port: 3306,
   dialectOptions: {
